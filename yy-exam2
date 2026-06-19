@@ -1,0 +1,33 @@
+#!/bin/bash
+
+clear
+
+while true; do
+    read -p "请输入学号: " student_id
+    if [[ "$student_id" =~ ^[A-Z0-9][A-Z0-9]{7,}$ ]]; then
+        break
+    else
+        echo "学号格式错误，请重新输入！"
+    fi
+done
+
+while true; do
+    read -p "请输入专业名(英文单词): " major
+    if [[ "$major" =~ ^[a-zA-Z]+$ ]]; then
+        break
+    else
+        echo "专业名格式错误，只能包含英文字母，请重新输入！"
+    fi
+done
+
+if id "$student_id" &>/dev/null; then
+    echo "用户 $student_id 已存在。"
+else
+    echo "用户 $student_id 不存在。"
+    echo "由于用户不存在，输出根据学号创建新用户(并指定用户组名为专业名)的命令："
+    echo "sudo useradd -g $major $student_id"
+fi
+
+echo "当前时间 : $(date '+%Y-%m-%d %H:%M:%S')"
+echo "按任意键结束脚本..."
+read -n 1 -s -r
