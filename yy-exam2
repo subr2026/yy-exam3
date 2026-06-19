@@ -3,7 +3,7 @@
 clear
 
 while true; do
-    read -p "请输入学号: " student_id
+    read -r -p "请输入学号: " student_id
     if [[ "$student_id" =~ ^[A-Z0-9][A-Z0-9]{7,}$ ]]; then
         break
     else
@@ -12,7 +12,7 @@ while true; do
 done
 
 while true; do
-    read -p "请输入专业名(英文单词): " major
+    read -r -p "请输入专业名(英文单词): " major
     if [[ "$major" =~ ^[a-zA-Z]+$ ]]; then
         break
     else

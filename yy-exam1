@@ -1,0 +1,61 @@
+#!/bin/bash
+
+cleanup() {
+    echo "yangyang fin - 正在清理临时文件..."
+    for file in "${created_files[@]}"; do
+        if [ -f "$file" ]; then
+            rm -f "$file"
+            echo "已删除: $file"
+        fi
+    done
+    exit 0
+}
+
+trap cleanup EXIT INT TERM
+
+created_files=()
+
+if [ "$#" -ne 2 ] || ! [[ "$1" =~ ^[0-9]+$ ]] || [ "$1" -le 0 ]; then
+    echo "错误：参数个数或格式不正确。"
+    echo "用法: $0 <正整数n> <学号>"
+    echo "按任意键退出程序..."
+    read -n 1 -s -r
+    exit 1
+fi
+
+n=$1
+student_id=$2
+echo "yangyang will create $n files"
+
+TARGET_DIR="yygit"
+if [ ! -d "$TARGET_DIR" ]; then
+    mkdir -p "$TARGET_DIR"
+fi
+cd "$TARGET_DIR" || exit 1
+
+last_digit=${student_id: -1}
+remainder=$((last_digit % 5))
+case $remainder in
+    1) fruit_name="coconut" ;;
+    2) fruit_name="lemon" ;;
+    3) fruit_name="mango" ;;
+    4) fruit_name="pitaya" ;;
+    0) fruit_name="plum" ;;
+esac
+
+for ((i=1; i<=n; i++)); do
+    filename="${fruit_name}-${i}.MP3"
+    if [ ! -f "$filename" ]; then
+        touch "$filename"
+        created_files+=("$filename")
+        echo "已创建文件: $filename"
+    else
+        echo "文件已存在，跳过创建: $filename"
+    fi
+done
+
+echo "yangyang fin"
+echo "新创建的文件列表: ${created_files[*]}"
+echo "当前时间 T2: $(date '+%Y-%m-%d %H:%M:%S')"
+echo "按任意键退出程序..."
+read -n 1 -s -r
